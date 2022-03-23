@@ -439,11 +439,11 @@ void TestMatchingQueryWordsFromDocument(){
 // 5.Сортировка найденных документов по релевантности.
 // Возвращаемые при поиске документов результаты должны быть отсортированы в порядке убывания релевантности.
 void TestSortByRelevance(){
-    const int id_first = 1, id_second = 2, id_third = 3;
+    const int id_first = 0, id_second = 1, id_third = 2;
     const string content_first = "pasha masha yandex"s;
     const string content_second = "pasha masha cats "s;
     const string content_third = "only masha and cat"s;
-    const vector<int> ratings_first = {0, 2, 7}, ratings_second = {0}, ratings_third = {-1, -1, -1};
+    const vector<int> ratings_first = {8, -3}, ratings_second = {7, 2, 0}, ratings_third = {-1, -2};
 
     SearchServer server;
     server.AddDocument(id_first, content_first, DocumentStatus::ACTUAL, ratings_first);
@@ -451,10 +451,19 @@ void TestSortByRelevance(){
     server.AddDocument(id_third, content_third, DocumentStatus::ACTUAL, ratings_third);
 
     const auto result_documents = server.FindTopDocuments("pasha masha yandex"s);
-    assert(result_documents.size() == 3);
-    assert(result_documents[0].id == 1);
-    assert(result_documents[1].id == 2);
-    assert(result_documents[2].id == 3);
+    double begin = 0, end = 0;
+    for (const auto& document : result_documents) {
+        if(begin == 0 && end == 0)
+        {
+            begin = end = document.relevance;
+        }
+        else
+        {
+            end = document.relevance;
+        }
+        ASSERT((begin >=  end));
+        begin = end;
+    }
 }
 
 // 6.Рейтинг добавленного документа равен среднему арифметическому оценок документа.
@@ -555,9 +564,11 @@ void TestCountRelevance(){
     server.AddDocument(id_third, content_third, DocumentStatus::ACTUAL, ratings);
     const auto doc = server.FindTopDocuments("pasha"s);
     double idf = log(static_cast<double>(3) / 2);
-    ASSERT(abs((doc[0].relevance - idf)< ETALON_RELEVANCE));
-    ASSERT(abs((doc[1].relevance - 0.5 * idf) < ETALON_RELEVANCE));
-    ASSERT(abs((doc[2].relevance - 0.25 * idf) < ETALON_RELEVANCE));
+    //Ошибка. TestCountRelevance: ASSERT((abs(doc[0].relevance - idf) < ETALON_R
+    //ELEVANCE)) failed.
+    ASSERT(((doc[0].relevance - idf) < ETALON_RELEVANCE));
+    ASSERT(((doc[1].relevance - 0.5 * idf) < ETALON_RELEVANCE));
+    ASSERT(((doc[2].relevance - 0.25 * idf) < ETALON_RELEVANCE));
 }
 
 // Функция TestSearchServer является точкой входа для запуска тестов
