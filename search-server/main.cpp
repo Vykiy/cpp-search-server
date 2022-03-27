@@ -10,6 +10,7 @@
 using namespace std;
 
 const int MAX_RESULT_DOCUMENT_COUNT = 5;
+const double ADMISSIBLE_ERROR = 1e-6;
 
 string ReadLine() {
     string s;
@@ -88,6 +89,11 @@ public:
         }
     }
 
+    explicit SearchServer(const string& stop_words_text)
+            : SearchServer(SplitIntoWords(stop_words_text)) {
+
+            }
+
     void AddDocument(int document_id, const string& document, DocumentStatus status, const vector<int>& ratings) {
         if (document_id < 0) {
             throw invalid_argument("invalid_document_id");
@@ -115,7 +121,7 @@ public:
 
         auto matched_documents = FindAllDocuments(query, document_predicate);
         sort(matched_documents.begin(), matched_documents.end(), [](const Document& lhs, const Document& rhs) {
-            if (abs(lhs.relevance - rhs.relevance) < 1e-6) {
+            if (abs(lhs.relevance - rhs.relevance) < ADMISSIBLE_ERROR) {
                 return lhs.rating > rhs.rating;
             } else {
                 return lhs.relevance > rhs.relevance;
@@ -183,6 +189,7 @@ private:
         int rating;
         DocumentStatus status;
     };
+
     const set<string> stop_words_;
     map<string, map<int, double>> word_to_document_freqs_;
     map<int, DocumentData> documents_;
