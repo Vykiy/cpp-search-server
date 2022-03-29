@@ -26,13 +26,15 @@ class Paginator {
 public:
     Paginator(Iterator it_begin, Iterator it_end, size_t& page_size)
     {
-        for (auto it = it_begin; it != it_end;) {
-            if (distance(it, it_end) < static_cast<int>(page_size)) {
-                pages_.push_back(IteratorRange(it, it_end));
-                break;
-            } else {
-                pages_.push_back(IteratorRange(it, it + page_size));
-                advance(it, page_size);
+        if (it_end >= it_begin && page_size > 0) {
+            for (auto it = it_begin; it != it_end;) {
+                if (distance(it, it_end) < static_cast<int>(page_size)) {
+                    pages_.push_back(IteratorRange(it, it_end));
+                    break;
+                } else {
+                    pages_.push_back(IteratorRange(it, it + page_size));
+                    advance(it, page_size);
+                }
             }
         }
     }
