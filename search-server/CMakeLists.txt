@@ -1,17 +1,20 @@
 cmake_minimum_required(VERSION 3.21)
-project(cpp_search_server_main)
+project(project)
 
 set(CMAKE_CXX_STANDARD 14)
 
 include_directories(.)
 
-add_executable(cpp_search_server_main
+add_executable(project
         document.cpp
         document.h
+        log_duration.h
         main.cpp
         paginator.h
         read_input_functions.cpp
         read_input_functions.h
+        remove_duplicates.cpp
+        remove_duplicates.h
         request_queue.cpp
         request_queue.h
         search_server.cpp
