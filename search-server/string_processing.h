@@ -1,17 +1,20 @@
 #pragma once
-#include <set>
+
 #include <string>
 #include <vector>
+#include <set>
 
-bool IsValidText(const std::string& text);
+using std::set;
+using std::string;
+using std::vector;
 
-std::vector<std::string> SplitIntoWords(const std::string& text);
+vector<string> SplitIntoWords (const string &text);
 
-template <typename StringContainer>
-std::set<std::string> MakeUniqueNonEmptyStrings(const StringContainer& strings) {
-    std::set<std::string> non_empty_strings;
-    for (const std::string& str : strings) {
-        if (!str.empty() && IsValidText(str)) {
+template<typename StringContainer>
+set<string> MakeUniqueNonEmptyStrings (const StringContainer &strings) {
+    set<string> non_empty_strings;
+    for (const string &str: strings) {
+        if (! str.empty()) {
             non_empty_strings.insert(str);
         }
     }

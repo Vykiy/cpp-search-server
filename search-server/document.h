@@ -1,10 +1,13 @@
 #pragma once
+
 #include <iostream>
+#include <vector>
 
 struct Document {
-    Document();
-    Document(int id, double relevance, int rating);
-
+    Document () = default;
+    
+    Document (int id, double relevance, int rating);
+    
     int id = 0;
     double relevance = 0.0;
     int rating = 0;
@@ -17,6 +20,8 @@ enum class DocumentStatus {
     REMOVED,
 };
 
-void PrintDocument(const Document& document);
+std::ostream &operator<< (std::ostream &out, const Document &document);
 
-std::ostream& operator<<(std::ostream& output, Document document);
+void PrintDocument (const Document &document);
+
+void PrintMatchDocumentResult (int document_id, const std::vector<std::string> &words, DocumentStatus status);
