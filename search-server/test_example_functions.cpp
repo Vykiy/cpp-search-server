@@ -1,33 +1,37 @@
 #include "test_example_functions.h"
 
-void AddDocument (SearchServer &search_server, const int &id, const string &document,
-                  DocumentStatus status, const vector<int> &rating) {
+using namespace std;
+
+void AddDocument(SearchServer& search_server, int document_id, string_view document, DocumentStatus status,
+                 const vector<int>& ratings) {
     try {
-        search_server.AddDocument(id, document, status, rating);
-    } catch (const std::exception &e) {
-        std::cerr << "Ошибка при добавлении нового документа: " << id << ": "s << e.what() << '\n';
+        search_server.AddDocument(document_id, document, status, ratings);
+    } catch (const invalid_argument& e) {
+        cout << "Error when adding document "s << document_id << ": "s << e.what() << endl;
     }
 }
 
-void FindTopDocuments (const SearchServer &search_server, const string &raw_query) {
-    std::cout << "Результаты поиска по запросу: "s << raw_query << '\n';
+void FindTopDocuments(const SearchServer& search_server, string_view raw_query) {
+    cout << "Search result for the query: "s << raw_query << endl;
     try {
         for (const Document& document : search_server.FindTopDocuments(raw_query)) {
             PrintDocument(document);
         }
-    } catch (const std::exception& e) {
-        std::cout << "Ошибка при поиске: "s << e.what() << '\n';
+    } catch (const invalid_argument& e) {
+        cout << "Search error: "s << e.what() << endl;
     }
 }
 
-void MatchDocuments(const SearchServer& search_server, const string& query) {
+void MatchDocuments(const SearchServer& search_server, string_view query) {
     try {
-        std::cout << "Матчинг документов по запросу: "s << query << '\n';
+        cout << "Matching documents on query: "s << query << endl;
         for (const int document_id : search_server) {
             const auto [words, status] = search_server.MatchDocument(query, document_id);
             PrintMatchDocumentResult(document_id, words, status);
         }
-    } catch (const std::exception& e) {
-        std::cout << "Ошибка при матчинге документов по запросу "s << query << ": "s << e.what() << '\n';
+
+    } catch (const invalid_argument& e) {
+        cout << "Error matching documents on query "s << query << ": "s << e.what() << endl;
     }
 }
+

@@ -1,22 +1,22 @@
 #pragma once
 
-#include <string>
+#include <iostream>
 #include <vector>
+#include <string>
 #include <set>
+#include <algorithm>
+#include <execution>
 
-using std::set;
-using std::string;
-using std::vector;
 
-vector<string> SplitIntoWords (const string &text);
-
-template<typename StringContainer>
-set<string> MakeUniqueNonEmptyStrings (const StringContainer &strings) {
-    set<string> non_empty_strings;
-    for (const string &str: strings) {
-        if (! str.empty()) {
-            non_empty_strings.insert(str);
+template <typename StringContainer>
+std::set<std::string, std::less<>> MakeUniqueNonEmptyStrings(const StringContainer& strings) {
+    std::set<std::string, std::less<>> non_empty_strings;
+    for (std::string_view str : strings) {
+        if (!str.empty()) {
+            non_empty_strings.emplace(str);
         }
     }
     return non_empty_strings;
 }
+
+std::vector<std::string_view> SplitIntoWords(std::string_view text);

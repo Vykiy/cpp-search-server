@@ -1,12 +1,22 @@
 #pragma once
 
-#include "search_server.h"
-#include<string>
+#include <iostream>
+#include <execution>
+#include <stdexcept>
+#include <deque>
+#include <string>
 #include <vector>
 
-void AddDocument (SearchServer &search_server, const int& id, const string& documents,
-                  DocumentStatus status, const vector<int> &rating);
+#include "search_server.h"
+#include "document.h"
 
-void FindTopDocuments(const SearchServer& search_server, const string& raw_query);
 
-void MatchDocuments(const SearchServer& search_server, const string& query);
+
+void AddDocument(SearchServer& search_server, int document_id, std::string_view document, DocumentStatus status,
+                 const std::vector<int>& ratings);
+
+void FindTopDocuments(const SearchServer& search_server, std::string_view raw_query);
+
+void MatchDocuments(const SearchServer& search_server, std::string_view query);
+
+
